@@ -13,7 +13,9 @@ class ExampleTest extends TestCase
      */
     public function testBasicExample()
     {
-        $this->visit('/')
-             ->see('Laravel 5');
+        $user = App\User::find(1);
+        $this->actingAs($user)
+             ->visit('/')
+             ->see('Laravular Test Page');
     }
 }
