@@ -15,7 +15,11 @@ class ApplicationController extends BaseController
      */
     public function index()
     {
-        return $this->user->applications;
+        $applications = $this->user->applications;
+        foreach($applications as $application){
+            $application->populateDevices();
+        }
+        return $applications;
     }
 
     /**

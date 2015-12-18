@@ -8,7 +8,7 @@ use App\Application;
 use App\DeviceApplications;
 
 class DeviceApplicationController extends BaseController
-{
+{    
     /**
     * Store a newly created resource in storage.
     *
