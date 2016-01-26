@@ -14,6 +14,16 @@ body {
     margin-right: 5px;
 }
 
+#main-grid a {
+    cursor: pointer;
+}
+
+.small-form {
+    max-width: 500px;
+    padding: 15px;
+    margin: 0 auto;
+}
+
 .form-signin {
   max-width: 330px;
   padding: 15px;

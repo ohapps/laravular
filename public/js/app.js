@@ -49,11 +49,11 @@ app.controller('MainController', ['$scope','$http', function($scope, $http){
                 id: null,
                 portable: 0
             };
-            $scope.modifcationType = "New";
+            $scope.newRecord = true;
         }else{
             $scope.application = application;
             $scope.application.category_id = application.category_id.toString();
-            $scope.modifcationType = "Edit";
+            $scope.newRecord = false;
         }
         $('#applicationModal').modal('show');
     }
@@ -61,7 +61,7 @@ app.controller('MainController', ['$scope','$http', function($scope, $http){
     $scope.saveApplication = function(){
         $('#applicationModal').modal('hide');
         $('#pleaseWaitDialog').modal('show');
-        if($scope.modifcationType == 'New'){
+        if($scope.newRecord == true){
             $http.post(
                 '/api/application',
                 $scope.application
@@ -81,29 +81,128 @@ app.controller('MainController', ['$scope','$http', function($scope, $http){
         }
     }
 
+    $scope.deleteApplication = function(){        
+        $('#applicationModal').modal('hide');
+        $('#pleaseWaitDialog').modal('show');
+        $http.delete(
+            '/api/application/' + $scope.application.id
+        ).success(function(data){
+            angular.forEach($scope.applications, function(app, index){
+                if($scope.application.id == app.id){
+                    $scope.applications.splice(index,1);
+                }
+            });
+            $('#pleaseWaitDialog').modal('hide');
+        });
+    }
+
+    $scope.editDevice = function(device){
+        if(device == null){
+            $scope.device = {
+                id: null
+            };
+            $scope.newRecord = true;
+        }else{
+            $scope.device = device;
+            $scope.newRecord = false;
+        }
+        $('#deviceModal').modal('show');
+    }
+
     $scope.saveDevice = function(){
-        $http.post(
-            '/api/device',
-            {
-                name : $scope.name,
-                os : $scope.os
-            }).success(function(data){
+        $('#deviceModal').modal('hide');
+        $('#pleaseWaitDialog').modal('show');
+        if($scope.newRecord == true){
+            $http.post(
+                '/api/device',
+                $scope.device
+            ).success(function(data){
                 $scope.devices.push(data);
-                $('#newDeviceModal').modal('hide');
-            }
-        );
+                $('#pleaseWaitDialog').modal('hide');
+            });
+        }else{
+            $http.put(
+                '/api/device/' + $scope.device.id,
+                $scope.device
+            ).success(function(data){
+                $('#pleaseWaitDialog').modal('hide');
+            });
+        }
+    }
+
+    $scope.deleteDevice = function(){
+        $('#deviceModal').modal('hide');
+        $('#pleaseWaitDialog').modal('show');
+        $http.delete(
+            '/api/device/' + $scope.device.id
+        ).success(function(data){
+            angular.forEach($scope.devices, function(dev, index){
+                if($scope.device.id == dev.id){
+                    $scope.devices.splice(index,1);
+                }
+            });
+            $('#pleaseWaitDialog').modal('hide');
+        });
+    }
+
+    $scope.editCategory = function(category){
+        if(category == null){
+            $scope.category = {
+                id: null
+            };
+            $scope.newRecord = true;
+        }else{
+            $scope.category = category;
+            $scope.newRecord = false;
+        }
+        $('#categoryModal').modal('show');
     }
 
     $scope.saveCategory = function(){
-        $http.post(
-            '/api/category',
-            {
-                description : $scope.description
-            }).success(function(data){
+        $('#categoryModal').modal('hide');
+        $('#pleaseWaitDialog').modal('show');
+        if($scope.newRecord == true){
+            $http.post(
+                '/api/category',
+                $scope.category
+            ).success(function(data){
                 $scope.categories.push(data);
-                $('#newCategoryModal').modal('hide');
-            }
-        );
+                $('#pleaseWaitDialog').modal('hide');
+            });
+        }else{
+            $http.put(
+                '/api/category/' + $scope.category.id,
+                $scope.category
+            ).success(function(data){
+                $('#pleaseWaitDialog').modal('hide');
+            });
+        }
+    }
+
+    $scope.deleteCategory = function(){
+        $('#categoryModal').modal('hide');
+        $('#pleaseWaitDialog').modal('show');
+        $http.delete(
+            '/api/category/' + $scope.category.id
+        ).success(function(data){
+            angular.forEach($scope.categories, function(cat, index){
+                if($scope.category.id == cat.id){
+                    $scope.categories.splice(index,1);
+                }
+            });
+            $('#pleaseWaitDialog').modal('hide');
+        });
+    }
+
+    $scope.showConfirmDialog = function(message, callbackFunction){
+        $scope.confirmMessage = message;
+        $scope.confirmCallback = callbackFunction;
+        $('#confirmModal').modal('show');
+    }
+
+    $scope.completeConfirmAction = function(){
+        $('#confirmModal').modal('hide');
+        $scope.confirmCallback();
     }
 
 }]);

@@ -16,6 +16,10 @@ Route::get('/', ['middleware' => 'auth', function () {
     return view('index');
 }]);
 
+Route::get('/account', ['middleware' => 'auth', function () {
+    return view('account');
+}]);
+
 // API routes
 Route::group(['prefix' => 'api', 'middleware' => 'auth.basic'], function () {
     Route::post('device-application', 'Api\DeviceApplicationController@store');

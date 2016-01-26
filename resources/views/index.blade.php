@@ -8,10 +8,10 @@
             <button type="button" class="btn btn-default" ng-click="editApplication(null)">
               <span class="glyphicon glyphicon-console" aria-hidden="true"></span> New Application
             </button>
-            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#newDeviceModal">
+            <button type="button" class="btn btn-default" ng-click="editDevice(null)">
               <span class="glyphicon glyphicon-phone" aria-hidden="true"></span> New Device
             </button>
-            <button type="button" class="btn btn-default" data-toggle="modal" data-target="#newCategoryModal">
+            <button type="button" class="btn btn-default" ng-click="editCategory(null)">
               <span class="glyphicon glyphicon-tag" aria-hidden="true"></span> New Category
             </button>
         </div>
@@ -19,10 +19,10 @@
             <table class="table table-striped">
                 <tr>
                     <th></th>
-                    <th ng-repeat="device in devices">@{{ device.name }}</th>
+                    <th ng-repeat="device in devices"><a ng-click="editDevice(device)">@{{ device.name }}</a></th>
                 </tr>
-                <tr ng-repeat-start="category in categories">
-                    <th>@{{ category.description }}</th>
+                <tr ng-repeat-start="category in categories" class="warning">
+                    <th><a ng-click="editCategory(category)">@{{ category.description }}</a></th>
                     <th ng-repeat="device in devices"></th>
                 </tr>
                 <tr ng-repeat="application in applications | filter: {category_id:category.id} | orderBy:orderApps" ng-repeat-end>
@@ -34,21 +34,21 @@
     </div>
 
     <div id="applicationModal" class="modal fade" role="dialog">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">@{{modifcationType}} Application</h4>
-          </div>
-          <div class="modal-body">
-              <form>
+      <form name="applicationForm" novalidate>
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><span ng-show="newRecord">New</span><span ng-hide="newRecord">Edit</span> Application</h4>
+              </div>
+              <div class="modal-body">
                 <div class="form-group">
                   <label for="name" class="control-label">Name:</label>
-                  <input type="text" class="form-control" id="name" ng-model="application.name">
+                  <input type="text" class="form-control" id="name" ng-model="application.name" required>
                 </div>
                 <div class="form-group">
                   <label for="category_id" class="control-label">Category:</label>
-                  <select class="form-control" id="category_id" ng-model="application.category_id">
+                  <select class="form-control" id="category_id" ng-model="application.category_id" required>
                     <option ng-repeat="category in categories" value="@{{ category.id }}">@{{ category.description }}</option>
                   </select>
                 </div>
@@ -57,64 +57,66 @@
                       <input type="checkbox" id="portable" ng-true-value="1" ng-false-value="0" ng-model="application.portable"> Portable
                   </label>
                 </div>
-              </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" ng-hide="newRecord" ng-click="showConfirmDialog('Are you sure you want to delete this application?',deleteApplication)">Delete</button>
+                <button type="button" class="btn btn-primary" ng-click="saveApplication()" ng-disabled="applicationForm.$invalid">Save</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" ng-click="saveApplication()">Save</button>
-          </div>
-        </div>
-      </div>
+      </form>
     </div>
 
-    <div id="newDeviceModal" class="modal fade" role="dialog">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">New Device</h4>
-          </div>
-          <div class="modal-body">
-              <form>
+    <div id="deviceModal" class="modal fade" role="dialog">
+      <form name="deviceForm" novalidate>
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><span ng-show="newRecord">New</span><span ng-hide="newRecord">Edit</span> Device</h4>
+              </div>
+              <div class="modal-body">
                 <div class="form-group">
                   <label for="name" class="control-label">Name:</label>
-                  <input type="text" class="form-control" id="name" ng-model="name">
+                  <input type="text" class="form-control" id="name" ng-model="device.name" required>
                 </div>
                 <div class="form-group">
                   <label for="name" class="control-label">Operating System:</label>
-                  <input type="text" class="form-control" id="os" ng-model="os">
+                  <input type="text" class="form-control" id="os" ng-model="device.os" required>
                 </div>
-              </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" ng-hide="newRecord" ng-click="showConfirmDialog('Are you sure you want to delete this device?',deleteDevice)">Delete</button>
+                <button type="button" class="btn btn-primary" ng-click="saveDevice()" ng-disabled="deviceForm.$invalid">Save</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" ng-click="saveDevice()">Save</button>
-          </div>
-        </div>
-      </div>
+      </form>
     </div>
 
-    <div id="newCategoryModal" class="modal fade" role="dialog">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">New Category</h4>
-          </div>
-          <div class="modal-body">
-              <form>
+    <div id="categoryModal" class="modal fade" role="dialog">
+      <form name="categoryForm" novalidate>
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title"><span ng-show="newRecord">New</span><span ng-hide="newRecord">Edit</span> Category</h4>
+              </div>
+              <div class="modal-body">
                 <div class="form-group">
                   <label for="name" class="control-label">Description:</label>
-                  <input type="text" class="form-control" id="description" ng-model="description">
+                  <input type="text" class="form-control" id="description" ng-model="category.description" required>
                 </div>
-              </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-danger" ng-hide="newRecord" ng-click="showConfirmDialog('Are you sure you want to delete this category?',deleteCategory)">Delete</button>            <button type="button" class="btn btn-primary" ng-click="saveCategory()" ng-disabled="categoryForm.$invalid">Save</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" ng-click="saveCategory()">Save</button>
-          </div>
-        </div>
-      </div>
+      </form>
     </div>
 
     <div id="pleaseWaitDialog" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
@@ -132,6 +134,24 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <div id="confirmModal" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Confirm</h4>
+          </div>
+          <div class="modal-body">
+            @{{ confirmMessage }}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" ng-click="completeConfirmAction()">Yes</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
     </div>
 
 </div>

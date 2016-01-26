@@ -1,10 +1,7 @@
 @extends('layouts.master')
 
-@section('navbar')
-
-@endsection
-
 @section('content')
+
 <div class="small-form">
 
     <form method="POST" action="/auth/register" class="form">
@@ -16,7 +13,7 @@
             @endforeach
         @endif
 
-        <h2 class="form-signin-heading">New Account</h2>
+        <h2 class="form-signin-heading">Modify Account</h2>
 
         <div class="form-group">
             <label for="name" class="control-label">Name</label>
@@ -29,12 +26,12 @@
         </div>
 
         <div class="form-group">
-            <label for="password" class="control-label">Password</label>
+            <label for="password" class="control-label">Change Password</label>
             <input type="password" name="password" class="form-control">
         </div>
 
         <div class="form-group">
-            <label for="password_confirmation" class="control-label">Confirm Password</label>
+            <label for="password_confirmation" class="control-label">Confirm New Password</label>
             <input type="password" name="password_confirmation" class="form-control">
         </div>
 
@@ -45,4 +42,5 @@
     </form>
 
 </div>
+
 @endsection
