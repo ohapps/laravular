@@ -15,7 +15,7 @@ class AuthTest extends TestCase
     {
         $this->actingAs($this->user1)
              ->visit('/')
-             ->see('Laravular Test Page');
+             ->see('Laravular');
     }
 
     /**
